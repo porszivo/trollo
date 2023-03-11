@@ -4,6 +4,10 @@ import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './tasks/entities/task.entity';
+import { DesksModule } from './desks/desks.module';
+import { Desk } from './desks/entities/desk.entity';
+import { ReservationsModule } from './reservations/reservations.module';
+import { Reservation } from './reservations/entities/reservation.entity';
 
 @Module({
   imports: [
@@ -14,10 +18,12 @@ import { Task } from './tasks/entities/task.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'trollo',
-      entities: [Task],
+      entities: [Task, Desk, Reservation],
       synchronize: true,
     }),
     TasksModule,
+    DesksModule,
+    ReservationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

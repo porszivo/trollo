@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: Office Planning Service
+  description: A microservice for reserving desks
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /reservations:
+    post:
+      summary: Reserve a desk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                  description: The date on which to reserve the desk
+                  example: "2023-03-15"
+                deskId:
+                  type: integer
+                  description: The unique ID of the desired desk
+                  example: 1
+              required:
+                - date
+                - deskId
+      responses:
+        "201":
+          description: The reservation was successfully created
+        "400":
+          description: Invalid request parameters
+        "409":
+          description: The desk is already reserved
+
+  /desks:
+    get:
+      summary: Retrieve all available desks
+      responses:
+        "200":
+          description: A list of all desks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique ID of the desk
+                      example: 1
+                    name:
+                      type: string
+                      description: The name of the desk
+                      example: "Desk 1"
+                    room:
+                      type: string
+                      description: The room where the desk is located
+                      example: "301"

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trollo/features/taskboard/screen/taskboard_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    const ProviderScope(
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -12,7 +18,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: const Center(
-          child: Text('Hello World!'),
+          child: TaskboardScreen(),
         ),
         floatingActionButton: ElevatedButton(
           onPressed: () => {},

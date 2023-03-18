@@ -1,5 +1,5 @@
 import { Desk } from 'src/desks/entities/desk.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Reservation {
@@ -7,11 +7,8 @@ export class Reservation {
   id: number;
 
   @Column()
-  date: string;
+  date: Date;
 
-  @Column()
-  deskId: number;
-
-  @OneToMany(() => Desk, (desk) => desk.reservations)
+  @ManyToOne(() => Desk, (desk) => desk.reservations)
   desk: Desk;
 }

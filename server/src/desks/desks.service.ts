@@ -18,7 +18,7 @@ export class DesksService {
   }
 
   findAll() {
-    return this.desksRepository.find();
+    return this.desksRepository.find({ relations: ['reservations'] });
   }
 
   async findOne(id: number) {

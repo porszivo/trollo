@@ -17,7 +17,21 @@ export class DesksService {
     });
   }
 
-  findAll() {
+  async findAll(date: String) {
+    const dateObj = new Date(date.replace(' ', 'T'));
+    const last = dateObj.getDate() - dateObj.getDay() + 8;
+    const first = dateObj.getDate() - dateObj.getDay() + 1;
+    const startDate = new Date(dateObj.setDate(first));
+    const endDate = new Date(dateObj.setDate(last));
+    const desks = await this.desksRepository
+      .createQueryBuilder('desk')
+      .leftJoinAndSelect('desk.reservations', 'reservation')
+      .where('reservation.date BETWEEN :startDate AND :endDate', {
+        startDate: startDate,
+        endDate: endDate,
+      })
+      .getMany();
+
     return this.desksRepository.find({ relations: ['reservations'] });
   }
 

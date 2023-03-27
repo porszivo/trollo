@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:trollo/features/desks/components/desk_card.dart';
+import 'package:trollo/features/desks/components/week_selector.dart';
 import 'package:trollo/features/desks/data/desk.dart';
 
 class DesksboardScreen extends ConsumerWidget {
@@ -7,36 +9,48 @@ class DesksboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _desks = ref.watch(deskDataProvider);
+    final desks = ref.watch(deskDataProvider);
     return Scaffold(
-      body: _desks.when(
-          data: (_data) {
-            List<Desk> userList = _data.map((e) => e).toList();
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  Expanded(
-                      child: ListView.builder(
-                          itemCount: userList.length,
-                          itemBuilder: (_, index) {
-                            return Card(
-                              color: Colors.blue,
-                              elevation: 4,
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              child: ListTile(
-                                title: Text(userList[index].name),
-                              ),
-                            );
-                          }))
-                ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Text(ref.watch(selectedWeekProvider.notifier).state.toString()),
+            const WeekSelector(),
+            Expanded(
+              child: desks.when(
+                data: (data) {
+                  List<Desk> deskList = data.map((e) => e).toList();
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: deskList.length,
+                            itemBuilder: (_, index) {
+                              return DeskCard(
+                                desk: deskList[index],
+                                onReservationChanged: (Reservation, bool) {
+                                  print(Reservation);
+                                },
+                                selectedWeek: DateTime.now(),
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+                error: (err, s) => Text(err.toString()),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            );
-          },
-          error: (err, s) => Text(err.toString()),
-          loading: () => const Center(
-                child: CircularProgressIndicator(),
-              )),
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: ElevatedButton(
         onPressed: () => {},
         style: ElevatedButton.styleFrom(

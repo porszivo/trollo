@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DesksService } from './desks.service';
 import { CreateDeskDto } from './dto/create-desk.dto';
 import { UpdateDeskDto } from './dto/update-desk.dto';
@@ -12,9 +20,10 @@ export class DesksController {
     return this.desksService.create(createDeskDto);
   }
 
-  @Get()
-  findAll() {
-    return this.desksService.findAll();
+  @Get(':startDate')
+  findAll(@Param('startDate') startDate: string) {
+    console.log(startDate);
+    return this.desksService.findAll(startDate);
   }
 
   @Get(':id')

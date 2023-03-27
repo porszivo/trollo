@@ -32,8 +32,8 @@ class Desk {
 
 class DeskService {
   String endpoint = 'http://localhost:3000/desks';
-  Future<List<Desk>> getDesks() async {
-    Response response = await get(Uri.parse(endpoint));
+  Future<List<Desk>> getDesks(String startDate) async {
+    Response response = await get(Uri.parse('$endpoint/$startDate'));
     if (response.statusCode == 200) {
       final List result = jsonDecode(response.body);
       return result.map((json) {
@@ -47,6 +47,10 @@ class DeskService {
 
 final deskProvider = Provider<DeskService>((ref) => DeskService());
 
-final deskDataProvider = FutureProvider<List<Desk>>((ref) async {
-  return ref.watch(deskProvider).getDesks();
+final deskDataProvider = FutureProvider.autoDispose<List<Desk>>((ref) async {
+  final selectedWeek = ref.watch(selectedWeekProvider);
+  final desks = await ref.watch(deskProvider).getDesks(selectedWeek.toString());
+  return desks;
 });
+
+final selectedWeekProvider = StateProvider<DateTime>((ref) => DateTime.now());
